@@ -18,7 +18,7 @@ from wireviz.Harness import Harness
 from wireviz.wv_helper import expand, open_file_read
 
 
-def parse(yaml_input: str, file_out: (str, Path) = None, return_types: (None, str, Tuple[str]) = None) -> Any:
+def parse(yaml_input: str, file_out: (str, Path) = None, return_types: (None, str, Tuple[str]) = None, prepend_info: [dict]=None) -> Any:
     """
     Parses yaml input string and does the high-level harness conversion
 
@@ -34,6 +34,14 @@ def parse(yaml_input: str, file_out: (str, Path) = None, return_types: (None, st
     """
 
     yaml_data = yaml.safe_load(yaml_input)
+    if prepend_info:
+        for info in prepend_info:
+            for key,val in info.items():
+                print(f"{key}:\nyaml: {yaml_data[key]},\ninfo: {val}")
+                if key != "connections":
+                    yaml_data[key].update(val)
+                else:
+                    yaml_data[key].extend(val)
 
     harness = Harness(
         metadata = Metadata(**yaml_data.get('metadata', {})),
@@ -232,7 +240,7 @@ def parse_cmdline():
     parser.add_argument('input_file', action='store', type=str, metavar='YAML_FILE')
     parser.add_argument('-o', '--output_file', action='store', type=str, metavar='OUTPUT')
     # Not implemented: parser.add_argument('--generate-bom', action='store_true', default=True)
-    parser.add_argument('--prepend-file', action='store', type=str, metavar='YAML_FILE')
+    parser.add_argument('--prepend-files', nargs='*', action='store', type=str, metavar='YAML_FILE')
     return parser.parse_args()
 
 
@@ -247,13 +255,17 @@ def main():
     with open_file_read(args.input_file) as fh:
         yaml_input = fh.read()
 
-    if args.prepend_file:
-        if not os.path.exists(args.prepend_file):
-            print(f'Error: prepend input file {args.prepend_file} inaccessible or does not exist, check path')
-            sys.exit(1)
-        with open_file_read(args.prepend_file) as fh:
-            prepend = fh.read()
-            yaml_input = prepend + yaml_input
+    # Create a list of dicts for each prepended file
+    prepend_info = []
+    if args.prepend_files:
+        for file in args.prepend_files:
+            if not os.path.exists(file):
+                print(f'Error: prepend input file {file} inaccessible or does not exist, check path')
+                sys.exit(1)
+            with open_file_read(file) as fh:
+                yaml_info = yaml.safe_load(fh)
+                prepend_info.append(yaml_info)
+    
 
     if not args.output_file:
         file_out = args.input_file
@@ -263,7 +275,7 @@ def main():
         file_out = args.output_file
     file_out = os.path.abspath(file_out)
 
-    parse(yaml_input, file_out=file_out)
+    parse(yaml_input, file_out=file_out, prepend_info=prepend_info)
 
 
 if __name__ == '__main__':
