@@ -1,5 +1,6 @@
 # Change Log
 
+
 ## [0.4](https://github.com/formatc1702/WireViz/tree/v0.4) (20XX-XX-XX)
 
 ### Backward-incompatible changes
@@ -21,9 +22,11 @@
 - Minor adjustments ([#256](https://github.com/wireviz/WireViz/pull/256))
 
 
+
 ## [0.3.2](https://github.com/formatc1702/WireViz/tree/v0.3.2) (2021-11-27)
 
 ### Hotfix
+
 
 - Adjust GraphViz generation code for compatibility with v0.18 of the `graphviz` Python package ([#258](https://github.com/formatc1702/WireViz/issues/258), [#261](https://github.com/formatc1702/WireViz/pull/261))
 

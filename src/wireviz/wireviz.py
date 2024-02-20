@@ -109,6 +109,7 @@ def parse(
         options=Options(**yaml_data.get("options", {})),
         tweak=Tweak(**yaml_data.get("tweak", {})),
     )
+
     # others
     # store mapping of components to their respective template
     designators_and_templates = {}
