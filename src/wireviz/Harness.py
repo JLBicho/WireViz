@@ -182,6 +182,8 @@ class Harness:
 
             html = []
             # fmt: off
+            if connector.pn == "" or connector.pn == None:
+                connector.pn = "-"
             rows = [[f'{html_bgcolor(connector.bgcolor_title)}{remove_links(connector.name)}'
                         if connector.show_name else None],
                     [pn_info_string(HEADER_PN, None, remove_links(connector.pn)),
@@ -295,6 +297,8 @@ class Harness:
                     awg_fmt = f" ({mm2_equiv(cable.gauge)} mm\u00B2)"
 
             # fmt: off
+            if cable.pn == "" or cable.pn == None:
+                cable.pn = "-"
             rows = [[f'{html_bgcolor(cable.bgcolor_title)}{remove_links(cable.name)}'
                         if cable.show_name else None],
                     [pn_info_string(HEADER_PN, None,

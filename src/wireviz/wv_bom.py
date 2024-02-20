@@ -244,6 +244,10 @@ def component_table_entry(
     spn: Optional[str] = None,
 ) -> str:
     """Return a diagram node table row string with an additional component."""
+    
+    if pn == "" or pn == None:
+        print(f"{pn}")
+        pn = "-"
     part_number_list = [
         pn_info_string(HEADER_PN, None, pn),
         pn_info_string(HEADER_MPN, manufacturer, mpn),
