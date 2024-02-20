@@ -99,6 +99,15 @@ def tuplelist2tsv(inp, header=None):
         output = output + "\t".join(str(remove_links(item)) for item in row) + "\n"
     return output
 
+def tuplelist2csv(inp, header=None):
+    output = ""
+    if header is not None:
+        inp.insert(0, header)
+    inp = flatten2d(inp)
+    for row in inp:
+        output = output + ";".join(str(remove_links(item)) for item in row) + "\n"
+    return output
+
 
 def remove_links(inp):
     return (
